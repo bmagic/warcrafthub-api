@@ -10,7 +10,6 @@ var compression = require('compression');
 var HttpStatus = require('http-status-codes');
 var applicationStorage = require("core/application-storage");
 
-
 module.exports.start = function (callback) {
 
     var app = express();

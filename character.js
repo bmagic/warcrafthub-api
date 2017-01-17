@@ -7,7 +7,8 @@ var async = require('async');
 var config = require("core/config");
 var logger = require("core/logger");
 var databases = require("core/databases");
-var httpProcess = require("core/http-process");
+var characterProcess = require("characters/character-process");
+
 
 async.waterfall([
     //Initialize the logger
@@ -30,7 +31,7 @@ async.waterfall([
     },
     //Start the HTTP server
     function (callback) {
-        httpProcess.start(function (error) {
+        characterProcess.start(function(error){
             callback(error);
         });
     }

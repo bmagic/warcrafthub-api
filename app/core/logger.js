@@ -2,7 +2,6 @@ var winston = require("winston");
 var applicationStorage = require("core/application-storage");
 
 module.exports.start = function (callback) {
-
     var transports = [
         new (require("winston-daily-rotate-file"))({
             filename: applicationStorage.config.logger.folder + "/" + applicationStorage.env + ".log",

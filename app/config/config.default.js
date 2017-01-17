@@ -5,5 +5,8 @@ module.exports = Object.freeze({
     logger: {
         folder: "logs",
         level: "debug"
+    },
+    bnet:{
+        clientID:"yourBnetClientID"
     }
 });
