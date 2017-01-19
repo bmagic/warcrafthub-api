@@ -1,6 +1,8 @@
 var async = require("async");
 var bnetAPI = require("core/api/bnet");
 var applicationStorage = require("core/application-storage");
+var updateUtils = require("updates/update-utils");
+var updateModel = require("updates/update-model");
 
 module.exports.start = function () {
     var logger = applicationStorage.logger;
@@ -8,17 +10,48 @@ module.exports.start = function () {
     async.waterfall(
         [
             function (callback) {
-                //Get next character to update
-                var nextUpdate = {region: "eu", realm: "Archimonde", name: "Bmagic"};
-                logger.info('Character %s/%s/%s parsing started', nextUpdate.region, nextUpdate.realm, nextUpdate.name);
-                callback(null, nextUpdate);
+                //Get the next character to update
+                updateUtils.getNextUpdate('cu', function (error, characterUpdate) {
+                    if (error) {
+                        callback(error);
+                    } else if (characterUpdate) {
+                        logger.info('Character %s/%s/%s parsing started', characterUpdate.region, characterUpdate.realm, characterUpdate.name);
+                        callback(error, characterUpdate);
+                    } else {
+                        logger.info('No character to update, waiting 10 sec');
+                        setTimeout(function () {
+                            callback(true)
+                        }, 10000);
+                    }
+                });
             },
-            function (nextUpdate, callback) {
-                bnetAPI.getCharacter(nextUpdate.region, nextUpdate.realm, nextUpdate.name, [], function (error, bnetCharacter) {
-                    callback(error, Object.freeze(bnetCharacter));
-                })
+            function (characterUpdate, callback) {
+                //Get the character from Bnet
+                bnetAPI.getCharacter(characterUpdate.region, characterUpdate.realm, characterUpdate.name, [], function (error, bnetCharacter) {
+                    if (error) {
+                        if (error.statusCode == 403) {
+                            logger.info("Bnet Api Deny, waiting 60 sec");
+                            updateModel.insert("wp_cu", characterUpdate.region, characterUpdate.realm, characterUpdate.name, characterUpdate.priority, function () {
+                                setTimeout(function () {
+                                    callback(true);
+                                }, 60000);
+                            });
+                        } else {
+                            callback(error);
+                        }
+                    } else {
+                        if (bnetCharacter && bnetCharacter.realm && bnetCharacter.name) {
+                            bnetCharacter.region = characterUpdate.region;
+                            callback(error, Object.freeze(bnetCharacter));
+                        } else {
+                            logger.warn("This character is inactive, skip it");
+                            callback(true);
+                        }
+                    }
+                });
             },
             function (bnetCharacter, callback) {
+                //Do stuff witch bnetCharacter
                 async.parallel([
                     function (callback) {
                         require("characters/parsing/faction").parse(bnetCharacter, function (error) {
@@ -30,7 +63,7 @@ module.exports.start = function () {
                 })
             }
         ], function (error) {
-            if (error) {
+            if (error && error != true) {
                 logger.error(error.message);
             }
 
