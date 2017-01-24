@@ -1,5 +1,5 @@
 // Set module root directory and define a custom require function
-require('app-module-path').addPath(__dirname + '/app');
+require('app-module-path').addPath(__dirname + '/../app');
 
 
 // Module dependencies
@@ -7,8 +7,8 @@ var async = require('async');
 var config = require("core/config");
 var logger = require("core/logger");
 var databases = require("core/databases");
-var characterProcess = require("characters/character-process");
-
+var auctionCharactersProcess = require("auctions/auction-characters-process");
+var auctionFeederProcess = require("auctions/auction-feeder-process");
 
 async.waterfall([
     //Initialize the logger
@@ -25,13 +25,24 @@ async.waterfall([
     },
     //Connect to database
     function (callback) {
-        databases.start(function (error) {
+        databases.startRedis(function (error) {
             callback(error);
         });
     },
-    //Start the HTTP server
+    //Start the process
     function (callback) {
-        characterProcess.start(function(error){
+        async.parallel([
+            function (callback) {
+                auctionCharactersProcess.start(function (error) {
+                    callback(error);
+                });
+            },
+            function (callback) {
+                auctionFeederProcess.start(function (error) {
+                    callback(error);
+                });
+            }
+        ], function (error) {
             callback(error);
         });
     }

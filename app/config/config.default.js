@@ -2,7 +2,7 @@ module.exports = Object.freeze({
     port: 3000,
     session_secret: "justbetweenyouandme",
     database: {
-        mongo: "mongodb://localhost/acdh",
+        mongo: "mongodb://localhost/warcrafthub",
         redis: "redis://localhost"
     },
     logger: {
@@ -12,5 +12,6 @@ module.exports = Object.freeze({
     bnet: {
         clientID: "yourBnetClientID"
     },
-    priorities: [0, 5, 10]
+    priorities: [0, 5, 10],
+    regions: ["us","eu","tw","kr"]
 });

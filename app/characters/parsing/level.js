@@ -1,4 +1,4 @@
-var characterFactionsModel = require("characters/character-factions-model");
+var characterLevelsModel = require("characters/character-levels-model");
 var applicationStorage = require("core/application-storage");
 var async = require("async");
 
@@ -9,9 +9,9 @@ module.exports.parse = function (bnetCharacter, callback) {
     if (bnetCharacter.faction !== null) {
         async.series([
             function (callback) {
-                characterFactionsModel.findOne(bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name, function (error, character) {
-                    if (character && character.faction === bnetCharacter.faction) {
-                        logger.silly("Character faction already exist, do nothing");
+                characterLevelsModel.findOne(bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name, function (error, character) {
+                    if (character && character.level === bnetCharacter.level) {
+                        logger.silly("Character level already exist, do nothing");
                         callback(true);
                     } else {
                         callback();
@@ -19,8 +19,8 @@ module.exports.parse = function (bnetCharacter, callback) {
                 });
             },
             function (callback) {
-                characterFactionsModel.insertOne(bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name, bnetCharacter.faction, function (error) {
-                    logger.info("Insert faction %s for %s/%s/%s",bnetCharacter.faction,bnetCharacter.region,bnetCharacter.realm,bnetCharacter.name);
+                characterLevelsModel.insertOne(bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name, bnetCharacter.faction, function (error) {
+                    logger.info("Insert level %s for %s/%s/%s",bnetCharacter.level,bnetCharacter.region,bnetCharacter.realm,bnetCharacter.name);
                     callback(error);
                 })
             }

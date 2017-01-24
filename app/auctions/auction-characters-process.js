@@ -10,24 +10,26 @@ module.exports.start = function () {
     async.waterfall(
         [
             function (callback) {
-                //Get the next character to update
-                updateUtils.getNextUpdate('cu', function (error, characterUpdate) {
+                //Get next auction to update
+                updateUtils.getNextUpdate('au', function (error, auctionUpdate) {
                     if (error) {
                         callback(error);
-                    } else if (characterUpdate) {
-                        logger.info('Character %s/%s/%s parsing started', characterUpdate.region, characterUpdate.realm, characterUpdate.name);
-                        callback(error, characterUpdate);
+                    } else if (auctionUpdate) {
+                        logger.info("Update auction with owner %s/%s/%s", auctionUpdate.region, auctionUpdate.realm, auctionUpdate.name);
+                        callback(error, auctionUpdate);
+
                     } else {
-                        logger.info('No character to update, waiting 10 sec');
+                        //Guild update is empty
+                        logger.info("No auction to update, waiting 1 min");
                         setTimeout(function () {
-                            callback(true)
-                        }, 10000);
+                            callback(true);
+                        }, 60000);
                     }
                 });
             },
             function (characterUpdate, callback) {
                 //Get the character from Bnet
-                bnetAPI.getCharacter(characterUpdate.region, characterUpdate.realm, characterUpdate.name, [], function (error, bnetCharacter) {
+                bnetAPI.getCharacter(characterUpdate.region, characterUpdate.realm, characterUpdate.name, ["guild"], function (error, bnetCharacter) {
                     if (error) {
                         if (error.statusCode == 403) {
                             logger.info("Bnet Api Deny, waiting 60 sec");
@@ -40,9 +42,12 @@ module.exports.start = function () {
                             callback(error);
                         }
                     } else {
-                        if (bnetCharacter && bnetCharacter.realm && bnetCharacter.name) {
+                        if (bnetCharacter && bnetCharacter.guild && bnetCharacter.guild.name) {
                             bnetCharacter.region = characterUpdate.region;
                             callback(error, Object.freeze(bnetCharacter));
+                        } else if (bnetCharacter) {
+                            logger.warn("This character has no guild, skip it");
+                            callback(true);
                         } else {
                             logger.warn("This character is inactive, skip it");
                             callback(true);
@@ -51,26 +56,10 @@ module.exports.start = function () {
                 });
             },
             function (bnetCharacter, callback) {
-                //Do stuff witch bnetCharacter
-                async.parallel([
-                    function (callback) {
-                        require("characters/parsing/character").parse(bnetCharacter, function (error) {
-                            callback(error);
-                        });
-                    },
-                    function (callback) {
-                        require("characters/parsing/faction").parse(bnetCharacter, function (error) {
-                            callback(error);
-                        });
-                    },
-                    function (callback) {
-                        require("characters/parsing/level").parse(bnetCharacter, function (error) {
-                            callback(error);
-                        });
-                    }
-                ], function (error) {
+                updateModel.insert("gu", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.guild.name, 0, function (error) {
+                    logger.info("Insert guild %s/%s/%s to update ", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.guild.name);
                     callback(error);
-                })
+                });
             }
         ], function (error) {
             if (error && error != true) {
