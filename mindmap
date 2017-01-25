@@ -1,4 +1,5 @@
 Collections :
-- characters: region realm name
+- characters: region realm name class race gender faction
+- characters_levels: region realm name level
+
 - guilds: region realm name
-- characters_factions: region realm name faction

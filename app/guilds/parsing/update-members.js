@@ -17,5 +17,4 @@ module.exports.parse = function (bnetGuild, callback) {
     }, function (error) {
         callback(error);
     });
-
 };

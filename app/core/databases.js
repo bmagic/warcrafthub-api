@@ -40,4 +40,4 @@ module.exports.startRedis = function (callback) {
         applicationStorage.redis = db;
         callback();
     });
-}
+};

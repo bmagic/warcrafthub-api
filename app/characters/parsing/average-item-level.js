@@ -5,19 +5,18 @@ module.exports.parse = function (bnetCharacter, callback) {
 
     var logger = applicationStorage.logger;
 
-    if (bnetCharacter.level !== undefined) {
-        var collection = applicationStorage.mongo.collection("character_levels");
+    if (bnetCharacter.items !== undefined && bnetCharacter.items.averageItemLevel !== undefined) {
+        var collection = applicationStorage.mongo.collection("character_average_item_levels");
         async.series([
             function (callback) {
-
                 collection.findOne({
                     region: bnetCharacter.region,
                     realm: bnetCharacter.realm,
                     name: bnetCharacter.name,
-                    level: bnetCharacter.level
+                    averageItemLevel: bnetCharacter.items.averageItemLevel
                 }, {_id: 1}, {sort: [["_id", "desc"]]}, function (error, character) {
                     if (character) {
-                        logger.silly("Character level already exist, do nothing");
+                        logger.silly("Character averageItemLevel already exist, do nothing");
                         callback(true);
                     } else {
                         callback();
@@ -29,9 +28,9 @@ module.exports.parse = function (bnetCharacter, callback) {
                     region: bnetCharacter.region,
                     realm: bnetCharacter.realm,
                     name: bnetCharacter.name,
-                    level: bnetCharacter.level
+                    averageItemLevel: bnetCharacter.items.averageItemLevel
                 }, function (error) {
-                    logger.info("Insert level %s for %s/%s/%s", bnetCharacter.level, bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
+                    logger.info("Insert averageItemLevel %s for %s/%s/%s", bnetCharacter.items.averageItemLevel, bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
                     callback(error);
                 })
             }
@@ -44,7 +43,7 @@ module.exports.parse = function (bnetCharacter, callback) {
         });
     }
     else {
-        logger.warning("Level missing in bnet json")
+        logger.warning("averageItemLevel missing in bnet json");
         callback();
     }
 };

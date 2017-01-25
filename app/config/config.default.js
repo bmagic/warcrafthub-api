@@ -13,5 +13,6 @@ module.exports = Object.freeze({
         clientID: "yourBnetClientID"
     },
     priorities: [0, 5, 10],
-    regions: ["us","eu","tw","kr"]
+    regions: ["us", "eu", "tw", "kr"],
+    min_level: 110
 });
