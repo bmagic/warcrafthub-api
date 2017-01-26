@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "mocha tests.js"
+    "doc": "apidoc -i app -o docs"
   },
   "license": "AGPL-3.0"
 }
