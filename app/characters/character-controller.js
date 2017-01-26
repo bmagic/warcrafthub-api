@@ -6,8 +6,7 @@ var applicationStorage = require("core/application-storage");
 
 
 /**
- * @api {get} /characters/:region/:realm/:name?fields=:fields Request Character information
- * @apiSampleRequest http://localhost:3002/api/v1/characters/:region/:realm/:name
+ * @api {get} /characters/:region/:realm/:name?fields=:fields Request a character information
  * @apiVersion 1.0.0
  * @apiName GetCharacter
  * @apiGroup Character
@@ -17,8 +16,7 @@ var applicationStorage = require("core/application-storage");
  * @apiParam {String} name Character name
  * @apiParam {String="items","averageItemLevel","averageItemLevelEquipped"} [fields] Fields coma separated
  *
-
- *
+ * @apiSampleRequest /characters/:region/:realm/:name
  */
 
 module.exports.getCharacter = function (req, res, next) {

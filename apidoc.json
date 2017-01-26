@@ -1,5 +1,7 @@
 {
   "name": "warcrafthub-api",
   "version": "1.0.0",
-  "description": "Warcrafthub API Documentation"
+  "description": "Warcrafthub API Documentation",
+  "url" : "https://warcrafthub.com/api/v1",
+  "sampleUrl": "http://localhost:3002/api/v1"
 }

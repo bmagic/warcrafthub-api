@@ -2,12 +2,7 @@
   {
     "type": "get",
     "url": "/characters/:region/:realm/:name?fields=:fields",
-    "title": "Request Character information",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:3002/api/v1/characters/:region/:realm/:name"
-      }
-    ],
+    "title": "Request a character information",
     "version": "1.0.0",
     "name": "GetCharacter",
     "group": "Character",
@@ -56,6 +51,11 @@
         ]
       }
     },
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3002/api/v1/characters/:region/:realm/:name"
+      }
+    ],
     "filename": "app/characters/character-controller.js",
     "groupTitle": "Character"
   }
