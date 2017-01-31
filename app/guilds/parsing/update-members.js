@@ -11,7 +11,7 @@ module.exports.parse = function (bnetGuild, callback) {
                 callback(error);
             })
         } else {
-            logger.warning("Members error in bnet json")
+            logger.warn("Members error in bnet json")
             callback();
         }
     }, function (error) {
