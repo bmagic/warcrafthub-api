@@ -31,7 +31,7 @@ module.exports.parse = function (bnetCharacter, callback) {
                     name: bnetCharacter.name,
                     level: bnetCharacter.level
                 }, function (error) {
-                    logger.info("Insert level %s for %s/%s/%s", bnetCharacter.level, bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
+                    logger.verbose("Insert level %s for %s/%s/%s", bnetCharacter.level, bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
                     callback(error);
                 })
             }

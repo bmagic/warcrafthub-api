@@ -30,7 +30,7 @@ module.exports.parse = function (bnetCharacter, callback) {
                     name: bnetCharacter.name,
                     averageItemLevelEquipped: bnetCharacter.items.averageItemLevelEquipped
                 }, function (error) {
-                    logger.info("Insert averageItemLevelEquipped %s for %s/%s/%s", bnetCharacter.items.averageItemLevelEquipped, bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
+                    logger.verbose("Insert averageItemLevelEquipped %s for %s/%s/%s", bnetCharacter.items.averageItemLevelEquipped, bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
                     callback(error);
                 })
             }

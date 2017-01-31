@@ -41,7 +41,7 @@ module.exports.parse = function (bnetCharacter, callback) {
                         faction: bnetCharacter.faction
                     },
                     function (error) {
-                        logger.info("Insert character %s/%s/%s", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name)
+                        logger.verbose("Insert character %s/%s/%s", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name)
                         callback(error);
                     })
             }

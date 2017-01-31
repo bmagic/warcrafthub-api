@@ -28,7 +28,7 @@ module.exports.parse = function (bnetCharacter, callback) {
             realm: bnetCharacter.realm,
             name: bnetCharacter.name,
         }, {$set: {items:items}}, {upsert: true}, function (error) {
-            logger.info("Insert items for %s/%s/%s", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
+            logger.verbose("Insert items for %s/%s/%s", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
             callback(error);
         });
     }
