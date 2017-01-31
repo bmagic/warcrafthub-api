@@ -44,7 +44,7 @@ module.exports.parse = function (bnetCharacter, callback) {
         });
     }
     else {
-        logger.warning("Level missing in bnet json")
+        logger.warn("Level missing in bnet json")
         callback();
     }
 };

@@ -43,7 +43,7 @@ module.exports.parse = function (bnetCharacter, callback) {
         });
     }
     else {
-        logger.warning("averageItemLevelEquipped missing in bnet json");
+        logger.warn("averageItemLevelEquipped missing in bnet json");
         callback();
     }
 };

@@ -53,7 +53,7 @@ module.exports.parse = function (bnetCharacter, callback) {
             }
         });
     } else {
-        logger.warning("Class, race, gender or faction missing in bnet json");
+        logger.warn("Class, race, gender or faction missing in bnet json");
         callback();
     }
 };
