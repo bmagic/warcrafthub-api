@@ -11,7 +11,7 @@ module.exports.start = function () {
         [
             function (callback) {
                 //Get the next guild to update
-                updateUtils.getNextUpdate('gu', function (error, guildUpdate) {
+                updateUtils.getNextUpdate('g', function (error, guildUpdate) {
                     if (error) {
                         callback(error);
                     } else if (guildUpdate) {
@@ -31,7 +31,7 @@ module.exports.start = function () {
                     if (error) {
                         if (error.statusCode == 403) {
                             logger.info("Bnet Api Deny, waiting 60 sec");
-                            updateModel.insert("gu", bnetGuild.region, bnetGuild.realm, bnetGuild.name, bnetGuild.priority, function () {
+                            updateModel.insert("g", bnetGuild.region, bnetGuild.realm, bnetGuild.name, bnetGuild.priority, function () {
                                 setTimeout(function () {
                                     callback(true);
                                 }, 60000);

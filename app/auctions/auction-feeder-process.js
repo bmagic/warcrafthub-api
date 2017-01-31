@@ -13,17 +13,17 @@ module.exports.start = function () {
                 //Look if characterUpdates, guildUpdates & auctionUpdates are empty
                 async.parallel({
                     characterUpdatesCount: function (callback) {
-                        updateModel.getCount("cu", 0, function (error, count) {
+                        updateModel.getCount("c", 0, function (error, count) {
                             callback(error, count);
                         });
                     },
                     guildUpdatesCount: function (callback) {
-                        updateModel.getCount("gu", 0, function (error, count) {
+                        updateModel.getCount("g", 0, function (error, count) {
                             callback(error, count);
                         });
                     },
                     auctionUpdatesCount: function (callback) {
-                        updateModel.getCount("au", 0, function (error, count) {
+                        updateModel.getCount("a", 0, function (error, count) {
                             callback(error, count);
                         });
                     }
@@ -58,7 +58,7 @@ function importAuctionOwners(callback) {
     var logger = applicationStorage.logger;
     async.waterfall([
         function (callback) {
-            updateUtils.getNextUpdate('rau', function (error, realmAuctionsUpdate) {
+            updateUtils.getNextUpdate('ra', function (error, realmAuctionsUpdate) {
                 if (error) {
                     callback(error);
                 } else if (realmAuctionsUpdate) {
@@ -88,7 +88,7 @@ function importAuctionOwners(callback) {
         },
         function (auctions, callback) {
             async.each(auctions, function (auction, callback) {
-                updateModel.insert("au", auctions.region, auction.ownerRealm, auction.owner, 0, function (error) {
+                updateModel.insert("a", auctions.region, auction.ownerRealm, auction.owner, 0, function (error) {
                     logger.info("Insert auction owner %s/%s/%s to update ", auctions.region, auction.ownerRealm, auction.owner);
                     callback(error);
                 });
@@ -114,7 +114,7 @@ function importAuctionRealms(callback) {
             },
             function (realms, callback) {
                 async.eachSeries(realms, function (realm, callback) {
-                    updateModel.insert("rau", region, "", realm.connected_realms[0], 0, function (error) {
+                    updateModel.insert("ra", region, "", realm.connected_realms[0], 0, function (error) {
                         logger.verbose("Insert realm auctions %s/%s to update", region, realm.connected_realms[0]);
                         callback(error);
                     });

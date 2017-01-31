@@ -11,7 +11,7 @@ module.exports.start = function () {
         [
             function (callback) {
                 //Get next auction to update
-                updateUtils.getNextUpdate('au', function (error, auctionUpdate) {
+                updateUtils.getNextUpdate('a', function (error, auctionUpdate) {
                     if (error) {
                         callback(error);
                     } else if (auctionUpdate) {
@@ -33,7 +33,7 @@ module.exports.start = function () {
                     if (error) {
                         if (error.statusCode == 403) {
                             logger.info("Bnet Api Deny, waiting 60 sec");
-                            updateModel.insert("cu", characterUpdate.region, characterUpdate.realm, characterUpdate.name, characterUpdate.priority, function () {
+                            updateModel.insert("c", characterUpdate.region, characterUpdate.realm, characterUpdate.name, characterUpdate.priority, function () {
                                 setTimeout(function () {
                                     callback(true);
                                 }, 60000);
@@ -56,7 +56,7 @@ module.exports.start = function () {
                 });
             },
             function (bnetCharacter, callback) {
-                updateModel.insert("gu", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.guild.name, 0, function (error) {
+                updateModel.insert("g", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.guild.name, 0, function (error) {
                     logger.info("Insert guild %s/%s/%s to update ", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.guild.name);
                     callback(error);
                 });

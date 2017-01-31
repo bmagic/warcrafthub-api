@@ -11,7 +11,7 @@ module.exports.start = function () {
         [
             function (callback) {
                 //Get the next character to update
-                updateUtils.getNextUpdate('cu', function (error, characterUpdate) {
+                updateUtils.getNextUpdate('c', function (error, characterUpdate) {
                     if (error) {
                         callback(error);
                     } else if (characterUpdate) {
@@ -31,7 +31,7 @@ module.exports.start = function () {
                     if (error) {
                         if (error.statusCode == 403) {
                             logger.info("Bnet Api Deny, waiting 60 sec");
-                            updateModel.insert("cu", characterUpdate.region, characterUpdate.realm, characterUpdate.name, characterUpdate.priority, function () {
+                            updateModel.insert("c", characterUpdate.region, characterUpdate.realm, characterUpdate.name, characterUpdate.priority, function () {
                                 setTimeout(function () {
                                     callback(true);
                                 }, 60000);
