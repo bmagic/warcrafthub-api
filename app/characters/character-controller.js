@@ -4,7 +4,6 @@ var async = require("async");
 var applicationStorage = require("core/application-storage");
 
 
-
 /**
  * @api {get} /characters/:region/:realm/:name?fields=:fields Request a character information
  * @apiVersion 1.0.0
@@ -72,7 +71,7 @@ module.exports.getCharacter = function (req, res, next) {
                             }
                             callback(error);
                         })
-                    }else{
+                    } else {
                         callback();
                     }
                 },
@@ -89,7 +88,7 @@ module.exports.getCharacter = function (req, res, next) {
                             }
                             callback(error);
                         })
-                    }else{
+                    } else {
                         callback();
                     }
                 },
@@ -116,7 +115,12 @@ module.exports.getCharacter = function (req, res, next) {
     ], function (error, character) {
         if (error && error != true) {
             logger.error(error);
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR));
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                    status: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR
+                    )
+                }
+            );
         } else if (character) {
             res.json(character);
         } else {

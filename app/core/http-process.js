@@ -20,7 +20,6 @@ module.exports.start = function (callback) {
     var server = http.createServer(app);
 
 
-
     //Create sessionStore inside Mongodb
     var sessionStore = new mongoStore({db: applicationStorage.mongo});
 
@@ -75,7 +74,10 @@ module.exports.start = function (callback) {
     //Log all other request and send 404
     app.use(function (req, res) {
         logger.error("Error 404 on request %s", req.url);
-        res.status(HttpStatus.NOT_FOUND).send(HttpStatus.getStatusText(HttpStatus.NOT_FOUND));
+        res.status(HttpStatus.NOT_FOUND).json({
+            status: HttpStatus.NOT_FOUND,
+            message: HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
+        });
     });
 
     server.listen(config.port, function () {
