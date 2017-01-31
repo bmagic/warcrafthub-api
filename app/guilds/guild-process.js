@@ -26,12 +26,26 @@ module.exports.start = function () {
                 });
             },
             function (guildUpdate, callback) {
+                updateModel.getCount("c", guildUpdate.priority, function (error, count) {
+                    if (count > 10000) {
+                        logger.info("Too many characters in priority %s,waiting 1 min ", guildUpdate.priority);
+                        updateModel.insert("g", guildUpdate.region, guildUpdate.realm, guildUpdate.name, guildUpdate.priority, function () {
+                            setTimeout(function () {
+                                callback(true);
+                            }, 60000);
+                        });
+                    } else {
+                        callback(error, guildUpdate);
+                    }
+                });
+            },
+            function (guildUpdate, callback) {
                 //Get the guild from Bnet
                 bnetAPI.getGuild(guildUpdate.region, guildUpdate.realm, guildUpdate.name, ["members"], function (error, bnetGuild) {
                     if (error) {
                         if (error.statusCode == 403) {
                             logger.info("Bnet Api Deny, waiting 60 sec");
-                            updateModel.insert("g", bnetGuild.region, bnetGuild.realm, bnetGuild.name, bnetGuild.priority, function () {
+                            updateModel.insert("g", guildUpdate.region, guildUpdate.realm, guildUpdate.name, guildUpdate.priority, function () {
                                 setTimeout(function () {
                                     callback(true);
                                 }, 60000);
