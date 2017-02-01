@@ -29,7 +29,7 @@ module.exports.start = function (callback) {
     //Allowed server to restart without loosing any session
     //noinspection JSUnresolvedVariable
     app.use(session({
-        key: 'acdh.sid',
+        key: 'whub.sid',
         cookie: {maxAge: 3600000 * 24 * 14},
         secret: config.session_secret,
         store: sessionStore,
@@ -53,7 +53,12 @@ module.exports.start = function (callback) {
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
             res.setHeader('Access-Control-Allow-Credentials', true);
         }
-        next();
+
+        if ('OPTIONS' === req.method) {
+            res.send(200);
+        } else {
+            next();
+        }
     });
 
 
@@ -70,6 +75,7 @@ module.exports.start = function (callback) {
 
     //Initialize api v1 routes
     app.use('/api/v1/characters', require("characters/routes.js"));
+    app.use('/api/v1/updates', require("updates/routes.js"));
 
     //Log all other request and send 404
     app.use(function (req, res) {
