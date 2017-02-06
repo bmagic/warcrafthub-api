@@ -17,7 +17,8 @@ module.exports.parse = function (bnetCharacter, callback) {
                     name: bnetCharacter.items[slot].name,
                     icon: bnetCharacter.items[slot].icon,
                     quality: bnetCharacter.items[slot].quality,
-                    bonusLists: bnetCharacter.items[slot].bonusLists
+                    bonusLists: bnetCharacter.items[slot].bonusLists,
+                    itemLevel: bnetCharacter.items[slot].itemLevel
                 };
             }
 
