@@ -107,6 +107,22 @@ module.exports.getCharacter = function (req, res, next) {
                     } else {
                         callback()
                     }
+                },
+                function (callback) {
+                    if (fields.indexOf("thumbnail") != -1) {
+                        applicationStorage.mongo.collection("character_thumbnails").findOne({
+                            region: region,
+                            realm: realm,
+                            name: name
+                        }, {_id: 0}, function (error, result) {
+                            if (result && result.thumbnail) {
+                                character.thumbnail = result.thumbnail
+                            }
+                            callback(error);
+                        })
+                    } else {
+                        callback()
+                    }
                 }
             ], function (error) {
                 callback(error, character);

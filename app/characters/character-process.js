@@ -77,6 +77,11 @@ module.exports.start = function () {
                         require("characters/parsing/items").parse(bnetCharacter, function (error) {
                             callback(error);
                         });
+                    },
+                    function (callback) {
+                        require("characters/parsing/thumbnail").parse(bnetCharacter, function (error) {
+                            callback(error);
+                        });
                     }
                 ], function (error) {
                     callback(error);
