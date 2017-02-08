@@ -18,17 +18,28 @@ module.exports.parse = function (bnetCharacter, callback) {
                     icon: bnetCharacter.items[slot].icon,
                     quality: bnetCharacter.items[slot].quality,
                     bonusLists: bnetCharacter.items[slot].bonusLists,
-                    itemLevel: bnetCharacter.items[slot].itemLevel
+                    itemLevel: bnetCharacter.items[slot].itemLevel,
+                    enchant: bnetCharacter.items[slot].tooltipParams.enchant,
                 };
-            }
 
-        });
+                if (bnetCharacter.items[slot].tooltipParams.gem0) {
+                    items[slot].gems = [bnetCharacter.items[slot].tooltipParams.gem0]
+                }
+                if (bnetCharacter.items[slot].tooltipParams.gem1) {
+                    items[slot].gems.push(bnetCharacter.items[slot].tooltipParams.gem1)
+                }
+                if (bnetCharacter.items[slot].tooltipParams.gem2) {
+                    items[slot].gems.push(bnetCharacter.items[slot].tooltipParams.gem2)
+                }
+
+            }
+        } );
 
         collection.updateOne({
             region: bnetCharacter.region,
             realm: bnetCharacter.realm,
             name: bnetCharacter.name,
-        }, {$set: {items:items}}, {upsert: true}, function (error) {
+        }, {$set: {items: items}}, {upsert: true}, function (error) {
             logger.verbose("Insert items for %s/%s/%s", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name);
             callback(error);
         });
