@@ -67,21 +67,6 @@ module.exports.start = function () {
                         require("characters/parsing/average-item-level").parse(bnetCharacter, function (error) {
                             callback(error);
                         });
-                    },
-                    function (callback) {
-                        require("characters/parsing/average-item-level-equipped").parse(bnetCharacter, function (error) {
-                            callback(error);
-                        });
-                    },
-                    function (callback) {
-                        require("characters/parsing/items").parse(bnetCharacter, function (error) {
-                            callback(error);
-                        });
-                    },
-                    function (callback) {
-                        require("characters/parsing/thumbnail").parse(bnetCharacter, function (error) {
-                            callback(error);
-                        });
                     }
                 ], function (error) {
                     callback(error);
