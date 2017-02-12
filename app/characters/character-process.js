@@ -27,7 +27,7 @@ module.exports.start = function () {
             },
             function (characterUpdate, callback) {
                 //Get the character from Bnet
-                bnetAPI.getCharacter(characterUpdate.region, characterUpdate.realm, characterUpdate.name, ["items"], function (error, bnetCharacter) {
+                bnetAPI.getCharacter(characterUpdate.region, characterUpdate.realm, characterUpdate.name, ["items","progression"], function (error, bnetCharacter) {
                     if (error) {
                         if (error.statusCode == 403) {
                             logger.info("Bnet Api Deny, waiting 60 sec");
@@ -65,6 +65,16 @@ module.exports.start = function () {
                     },
                     function (callback) {
                         require("characters/parsing/average-item-level").parse(bnetCharacter, function (error) {
+                            callback(error);
+                        });
+                    },
+                    function (callback) {
+                        require("characters/parsing/items").parse(bnetCharacter, function (error) {
+                            callback(error);
+                        });
+                    },
+                    function (callback) {
+                        require("characters/parsing/progression").parse(bnetCharacter, function (error) {
                             callback(error);
                         });
                     }

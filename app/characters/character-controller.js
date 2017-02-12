@@ -13,7 +13,7 @@ var applicationStorage = require("core/application-storage");
  * @apiParam {String="us","eu","kr","tw"} region Character region id
  * @apiParam {String} realm Character realm name
  * @apiParam {String} name Character name
- * @apiParam {String="items","averageItemLevel","averageItemLevelEquipped"} [fields] Fields coma separated
+ * @apiParam {String="items","progression"} [fields] Fields coma separated
  *
  * @apiSampleRequest /characters/:region/:realm/:name
  */
@@ -47,52 +47,6 @@ module.exports.getCharacter = function (req, res, next) {
         function (character, callback) {
             async.parallel([
                 function (callback) {
-                    applicationStorage.mongo.collection("character_levels").findOne({
-                        region: region,
-                        realm: realm,
-                        name: name
-                    }, {_id: 0}, {sort: [["_id", "desc"]]}, function (error, result) {
-                        if (result && result.level) {
-                            character.level = result.level
-                        }
-                        callback(error);
-                    })
-                },
-                function (callback) {
-                    if (fields.indexOf("averageItemLevel") != -1) {
-
-                        applicationStorage.mongo.collection("character_average_item_levels").findOne({
-                            region: region,
-                            realm: realm,
-                            name: name
-                        }, {_id: 0}, {sort: [["_id", "desc"]]}, function (error, result) {
-                            if (result && result.averageItemLevel) {
-                                character.averageItemLevel = result.averageItemLevel
-                            }
-                            callback(error);
-                        })
-                    } else {
-                        callback();
-                    }
-                },
-                function (callback) {
-                    if (fields.indexOf("averageItemLevelEquipped") != -1) {
-
-                        applicationStorage.mongo.collection("character_average_item_levels_equipped").findOne({
-                            region: region,
-                            realm: realm,
-                            name: name
-                        }, {_id: 0}, {sort: [["_id", "desc"]]}, function (error, result) {
-                            if (result && result.averageItemLevelEquipped) {
-                                character.averageItemLevelEquipped = result.averageItemLevelEquipped
-                            }
-                            callback(error);
-                        })
-                    } else {
-                        callback();
-                    }
-                },
-                function (callback) {
                     if (fields.indexOf("items") != -1) {
                         applicationStorage.mongo.collection("character_items").findOne({
                             region: region,
@@ -100,7 +54,13 @@ module.exports.getCharacter = function (req, res, next) {
                             name: name
                         }, {_id: 0}, function (error, result) {
                             if (result && result.items) {
-                                character.items = result.items
+                                character.items = result.items;
+                            }
+                            if (result && result.averageItemLevelEquipped){
+                                character.averageItemLevelEquipped = result.averageItemLevelEquipped;
+                            }
+                            if (result && result.averageItemLevel){
+                                character.averageItemLevel = result.averageItemLevel;
                             }
                             callback(error);
                         })
@@ -109,21 +69,21 @@ module.exports.getCharacter = function (req, res, next) {
                     }
                 },
                 function (callback) {
-                    if (fields.indexOf("thumbnail") != -1) {
-                        applicationStorage.mongo.collection("character_thumbnails").findOne({
+                    if (fields.indexOf("progression") != -1) {
+                        applicationStorage.mongo.collection("character_progressions").findOne({
                             region: region,
                             realm: realm,
                             name: name
                         }, {_id: 0}, function (error, result) {
-                            if (result && result.thumbnail) {
-                                character.thumbnail = result.thumbnail
+                            if (result && result.progression) {
+                                character.progression = result.progression;
                             }
                             callback(error);
                         })
                     } else {
                         callback()
                     }
-                }
+                },
             ], function (error) {
                 callback(error, character);
             });
@@ -131,7 +91,7 @@ module.exports.getCharacter = function (req, res, next) {
     ], function (error, character) {
         if (error && error != true) {
             logger.error(error);
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     status: HttpStatus.INTERNAL_SERVER_ERROR,
                     message: HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR
                     )
