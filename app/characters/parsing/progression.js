@@ -33,12 +33,29 @@ function getProgression(bnetProgression) {
     if (bnetProgression.raids) {
         bnetProgression.raids.forEach(function (raid) {
             if (raids.indexOf(raid.name) !== -1) {
-                progression[raid.name]={
-                    lfr: raid.lfr,
-                    normal:raid.normal,
-                    heroic:raid.heroic,
-                    mythic:raid.mythic,
-                    bosses:raid.bosses
+
+                var lfrKills = 0;
+                var normalKills = 0;
+                var heroicKills = 0;
+                var mythicKills = 0;
+
+                raid.bosses.forEach(function (boss) {
+                    if (boss.mythicKills > 0)
+                        mythicKills++;
+                    if (boss.heroicKills > 0)
+                        heroicKills++;
+                    if (boss.normalKills > 0)
+                        normalKills++;
+                    if (boss.lfrKills > 0)
+                        lfrKills++;
+                });
+
+                progression[raid.name] = {
+                    lfrKills: lfrKills,
+                    normalKills: normalKills,
+                    heroicKills: heroicKills,
+                    mythicKills: mythicKills,
+                    bosses: raid.bosses
                 }
             }
         });
