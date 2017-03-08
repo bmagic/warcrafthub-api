@@ -10,7 +10,9 @@ module.exports = Object.freeze({
         level: "debug"
     },
     bnet: {
-        clientID: "yourBnetClientID"
+        clientID: "yourBnetClientID",
+        clientSecret: "yourBnetClientSecret",
+        callbackURL: "https://[BASEURL]/api/v1/users/auth/bnet/callback"
     },
     priorities: [10, 5, 0],
     regions: ["us", "eu", "tw", "kr"],

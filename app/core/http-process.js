@@ -1,5 +1,7 @@
 //Load dependencies
+var fs = require('fs');
 var http = require('http');
+var https = require('https');
 var express = require("express");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -17,7 +19,17 @@ module.exports.start = function (callback) {
     var config = applicationStorage.config;
     var logger = applicationStorage.logger;
 
-    var server = http.createServer(app);
+
+    var server;
+    if (applicationStorage.env == 'dev') {
+        //Start the server in HTTPS for dev
+        server = https.createServer({key: fs.readFileSync('./app/config/dev-cert/server.key', 'utf8'), cert: fs.readFileSync('./app/config/dev-cert/server.crt', 'utf8')}, app);
+    }
+    else {
+        //Start the server in HTTP (reverse proxy make the SSL)
+        server = http.createServer(app);
+    }
+
 
 
     //Create sessionStore inside Mongodb
@@ -41,6 +53,7 @@ module.exports.start = function (callback) {
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
+
     //noinspection JSUnresolvedFunction
     app.use(passport.initialize());
     //noinspection JSUnresolvedFunction
@@ -74,6 +87,7 @@ module.exports.start = function (callback) {
     });
 
     //Initialize api v1 routes
+    app.use('/api/v1/users', require('users/routes.js'));
     app.use('/api/v1/characters', require("characters/routes.js"));
     app.use('/api/v1/updates', require("updates/routes.js"));
 
@@ -87,7 +101,9 @@ module.exports.start = function (callback) {
     });
 
     server.listen(config.port, function () {
-        applicationStorage.logger.info("Server HTTP listening on port %s", config.port);
+        var protocol = server.key ? "HTTPS" : "HTTP";
+
+        applicationStorage.logger.info("Server "+protocol+" listening on port %s", config.port);
         callback();
     });
 };
