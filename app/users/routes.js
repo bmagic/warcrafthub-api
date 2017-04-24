@@ -11,8 +11,8 @@ var auth = require("users/middleware/auth.js");
 require("users/middleware/bnet-auth.js");
 
 //Define routes
-router.get("/login", passport.authenticate("bnet"));
-router.get("/auth/bnet/callback", passport.authenticate("bnet", {successRedirect: '/', failureRedirect: '/'}));
+router.get("/auth/bnet", passport.authenticate("bnet"));
+router.get("/auth/bnet/callback", passport.authenticate("bnet", {successRedirect: 'http://localhost:3000', failureRedirect: 'http://localhost:3000'}));
 router.get('/logout', auth.isAuthenticated, userController.logout);
 router.get("/profile", userController.getProfile);
 // router.get("/user/characterAds", auth.isAuthenticated, userController.getCharacterAds);
