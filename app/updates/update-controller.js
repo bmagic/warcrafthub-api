@@ -27,7 +27,7 @@ module.exports.postUpdate = function (req, res) {
             });
         },
         function (type, callback) {
-            updateModel.getCount(type, 10, function (error, count) {
+            updateModel.getCount(type, function (error, count) {
                 callback(error, count);
             });
         }
