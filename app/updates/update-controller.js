@@ -22,7 +22,7 @@ module.exports.postUpdate = function (req, res) {
             }
         },
         function (type, callback) {
-            updateModel.insert(type, req.body.region, req.body.realm, req.body.name, 10, function (error) {
+            updateModel.insert(type, req.body.region, req.body.realm, req.body.name, 0, function (error) {
                 callback(error, type);
             });
         },

@@ -20,7 +20,7 @@ module.exports.insert = function (type, region, realm, name, priority, callback)
     var value = JSON.stringify({region: region, realm: realm, name: name, priority: priority});
 
     //Create or update auctionUpdate
-    redis.zadd(type, '-' + priority + '' + new Date().getTime(), value, function (error) {
+    redis.zadd(type, priority + '' + new Date().getTime(), value, function (error) {
         callback(error);
     });
 };
