@@ -16,11 +16,14 @@ var applicationStorage = require("core/application-storage");
 module.exports.insert = function (type, region, realm, name, priority, callback) {
     var redis = applicationStorage.redis;
 
+    //Concat priority with timestamp
+    priority = priority + '' + new Date().getTime();
+
     //Create object to insert
     var value = JSON.stringify({region: region, realm: realm, name: name, priority: priority});
 
     //Create or update auctionUpdate
-    redis.zadd(type, priority + '' + new Date().getTime(), value, function (error) {
+    redis.zadd(type, priority, value, function (error) {
         callback(error);
     });
 };
