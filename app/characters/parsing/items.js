@@ -1,29 +1,8 @@
-var applicationStorage = require("core/application-storage");
 
-module.exports.parse = function (bnetCharacter, callback) {
-
-    var logger = applicationStorage.logger;
-
-    var collection = applicationStorage.mongo.collection("character_items");
-
-
-    collection.updateOne({
-            region: bnetCharacter.region,
-            realm: bnetCharacter.realm,
-            name: bnetCharacter.name
-        }, {
-            $set: {
-                items: getItems(bnetCharacter.items),
-                averageItemLevel: bnetCharacter.items.averageItemLevel,
-                averageItemLevelEquipped: bnetCharacter.items.averageItemLevelEquipped
-            }
-        }, {upsert: true},
-        function (error) {
-            logger.verbose("Insert character items %s/%s/%s", bnetCharacter.region, bnetCharacter.realm, bnetCharacter.name)
-            callback(error);
-        })
-
-
+module.exports.parse = function (bnetCharacter, character) {
+    character.items = getItems(bnetCharacter.items);
+    character.averageItemLevel = bnetCharacter.items.averageItemLevel;
+    character.averageItemLevelEquipped = bnetCharacter.items.averageItemLevelEquipped;
 };
 
 
@@ -44,6 +23,7 @@ function getItems(bnetItems) {
             };
 
             if (bnetItems[slot].tooltipParams) {
+
                 if (bnetItems[slot].tooltipParams.enchant) {
                     items[slot].enchant = bnetItems[slot].tooltipParams.enchant
                 }
@@ -51,9 +31,13 @@ function getItems(bnetItems) {
                     items[slot].gems = [bnetItems[slot].tooltipParams.gem0]
                 }
                 if (bnetItems[slot].tooltipParams.gem1) {
+                    if (!items[slot].gems)
+                        items[slot].gems = [];
                     items[slot].gems.push(bnetItems[slot].tooltipParams.gem1)
                 }
                 if (bnetItems[slot].tooltipParams.gem2) {
+                    if (!items[slot].gems)
+                        items[slot].gems = [];
                     items[slot].gems.push(bnetItems[slot].tooltipParams.gem2)
                 }
             }

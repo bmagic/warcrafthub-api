@@ -28,6 +28,45 @@ module.exports.insert = function (type, region, realm, name, priority, callback)
     });
 };
 
+
+/**
+ * Return the next update in list with a priority
+ * @param type
+ * @param callback
+ */
+module.exports.getUpdate = function (type, callback) {
+    var redis = applicationStorage.redis;
+
+
+    redis.watch(type);
+    async.waterfall([
+        function (callback) {
+            redis.zrange(type, 0, 0, function (error, value) {
+                if (value.length !== 0) {
+                    callback(error, value);
+                } else {
+                    callback(true);
+                }
+
+            });
+        },
+        function (value, callback) {
+            var multi = redis.multi();
+            multi.zrem(type, value);
+            multi.exec(function (error) {
+                callback(error, JSON.parse(value));
+            });
+        }
+
+    ], function (error, update) {
+        if (error === true) {
+            callback();
+        } else {
+            callback(error, update);
+        }
+    });
+};
+
 /**
  * Return the number of updates in list
  * @param type
