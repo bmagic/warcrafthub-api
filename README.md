@@ -2,4 +2,4 @@
 
 This is the server side of warcrafhub. 
 
-See the documentation here : https://bmagic.github.io/warcrafthub-api/docs/
+See the documentation here : https://warcraftlfg.github.io/warcrafthub-api/docs/
