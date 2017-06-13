@@ -8,7 +8,7 @@ module.exports.start = function (callback) {
             json: false,
             handleExceptions: true
         })];
-    if (applicationStorage.env == "dev") {
+    if (applicationStorage.env === "dev") {
         transports.push(new (winston.transports.Console)({handleExceptions: true}));
     }
 

@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "warcrafthub-api",
+      "script": "warcrafthub-api/server.js",
+      "watch": "warcrafthub-api/app",
+      "env": {
+        "NODE_ENV": "dev"
+      }
+    }
+  ]
+}
